@@ -33,32 +33,30 @@ if(!$mysqli || $mysqli->connect_errno)
 //If there is a POST to the page with 
 if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"]))
 {
-	$dataValidated = NULL;
-
 	//Ensure the required Name field is filled
 	if($_POST["name"] == "")
 	{
-		echo "You must enter a video name.<br>";
+		echo "<h3>You must enter a video name.</h3><br>";
 		$dataValidated = false;
 	}
 	
 	//Ensure the Length is a number if the the field is populated
 	if((!$_POST["length"] == "") && !is_numeric($_POST["length"]))
 	{
-		echo "You must enter a number for the length";
+		echo "<h3>You must enter a number for the length.</h3><br>";
 		$dataValidated = false;
 	}
 	else if(intval($_POST["length"]) < 0)
 	{
-		echo "You must enter a positive number for the length";
+		echo "<h3>You must enter a positive number for the length.</h3><br>";
 		$dataValidated = false;
 	}
 
-	else
+	if($dataValidated != false)
 	{
-
+		$dataValidated = true;
 		//Check for a duplicate title in the database
-		/*if(!($stmt = $mysqli->prepare("SELECT name FROM film")))
+		if(!($stmt = $mysqli->prepare("SELECT name FROM film")))
 		{
 			echo "Couldn't prepare statement: (" . $mysqli->errno . ") " . $mysqli->error;
 		}
@@ -80,8 +78,7 @@ if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"])
 				$dataValidated = false;
 			}
 		}
-		else{$dataValidated = true;}
-		$stmt -> close();*/
+		$stmt -> close();
 		
 		if($dataValidated == true)
 		{
