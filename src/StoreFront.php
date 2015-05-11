@@ -44,7 +44,7 @@ if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"])
 	}
 	
 	//Ensure the Length is a number if the the field is populated
-	if((!$_POST["length"] == "") && !is_numeric($_POST["length"]))
+	if(!is_numeric($_POST["length"]))
 	{
 		echo "<h3>You must enter a number for the length.</h3>";
 		$dataValidated = false;
