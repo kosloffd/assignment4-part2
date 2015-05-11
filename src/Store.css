@@ -1,0 +1,70 @@
+input
+{
+	text-align: left;
+	width: 10em;
+	margin:1em;
+	padding-left: .5em;
+}
+
+fieldset
+{
+	display: inline-block;
+	border: 1px solid #aaa;
+	width: 70%;
+	margin: 0px;
+}
+
+fieldset>label
+{
+	margin-left: 1em;
+}
+
+fieldset>input
+{
+	padding: 0em;
+	margin: 0px;
+}
+
+fieldset>button
+{
+	margin-left: 2em;
+}
+
+h3
+{
+	margin: 10px;
+	color: #f55;
+}
+body
+{
+	margin-left: 10%
+}
+
+table
+{
+	width: 70%;
+	border: 2px solid #666;
+	border-collapse: collapse;
+}
+
+td
+{
+	text-align: center;
+	padding: 10px, 20px;
+	border: 1px solid #aaa;
+
+}
+tr:nth-child(odd)
+{
+	background-color: #beb;
+}
+
+tr:nth-child(even)
+{
+	background-color: #ccf;
+}
+
+tr:first-child
+{
+	background-color: #aaa;
+}

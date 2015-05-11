@@ -6,6 +6,7 @@ include 'password.php';
 ?>
 
 <!DOCTYPE html>
+<link rel="stylesheet" href="Store.css">
 <title>Video Store</title>
 
 <form action="StoreFront.php", method="POST">
@@ -45,12 +46,12 @@ if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"])
 	//Ensure the Length is a number if the the field is populated
 	if((!$_POST["length"] == "") && !is_numeric($_POST["length"]))
 	{
-		echo "<h3>You must enter a number for the length.</h3><br>";
+		echo "<h3>You must enter a number for the length.</h3>";
 		$dataValidated = false;
 	}
 	else if(intval($_POST["length"]) < 0)
 	{
-		echo "<h3>You must enter a positive number for the length.</h3><br>";
+		echo "<h3>You must enter a positive number for the length.</h3>";
 		$dataValidated = false;
 	}
 
@@ -75,7 +76,7 @@ if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"])
 		{
 			if($dbName == $_POST["name"])
 			{
-				echo "That Video can't be added: the name already exists.";
+				echo "<h3>That video can't be added: the name already exists.</h3>";
 				$dataValidated = false;
 			}
 		}
@@ -217,7 +218,7 @@ $dbLength = NULL;
 $dbRented = NULL;
 
 echo "<table>";
-echo "<tr> <td> <td>Title <td>Category <td>Length <td>Availability";
+echo "<tr> <th> <th>Title <th>Category <th>Length <th>Availability <th>";
 if(!$stmt->bind_result($movieID, $dbName, $dbCategory, $dbLength, $dbRented))
 {
 	echo "Couldn't bind return results: (" . $mysqli->errno . ") " . $mysqli->error;
@@ -233,18 +234,18 @@ while($stmt->fetch())
 		if($dbRented == 0){$dbRented = "Available";}
 		else{$dbRented = "Checked Out";}
 	
-		echo "<tr><td><form method=\"POST\"><button form=\"main\" name=\"deleteMovie\" value=\"$movieID\"type=\"submit\">Delete</button></form>
+		echo "<tr><td><form method=\"POST\"><button name=\"deleteMovie\" value=\"$movieID\" type=\"submit\">Delete</button></form>
 		 <td>$dbName <td>$dbCategory <td>$dbLength min <td>$dbRented";
 		if($dbRented == "Available")
-			{echo "<td><form method=\"POST\"><td><button name=\"checkoutMovie\" value=\"$movieID\" type=\"submit\">Checkout Movie</button></form>";}
+			{echo "<td><form method=\"POST\"><button name=\"checkoutMovie\" value=\"$movieID\" type=\"submit\">Checkout Movie</button></form>";}
 		else
 			{echo "<td><form method=\"POST\"><button name=\"returnMovie\" value=\"$movieID\" type=\"submit\">Return Movie</button></form>";}
 	}
 }
-if($movieID == NULL) {echo "<tr><td><td>There are no titles to display.";}
+if($movieID == NULL) {echo "<tr><td><td>There are no titles to display.<td><td><td><td>";}
 //Show the Delete All button only if there is data in the table
 echo "</table>";
-if(!($movieID == NULL)) {echo "<form method=\"POST\"><button form=\"main\" name=\"deleteAll\" value=\"true\">Delete All Movies</button></form>";}
+if(!($movieID == NULL)) {echo "<form method=\"POST\"><button name=\"deleteAll\" value=\"true\">Delete All Movies</button></form>";}
 
 $stmt->close();
 ?>
