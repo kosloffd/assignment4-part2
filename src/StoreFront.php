@@ -20,8 +20,8 @@ include 'password.php';
 	</fieldset>
 </form>
 
-<!--Form with no elements to POST data from buttons-->
-<form action="StoreFront.php", id="main" method="POST"></form>
+<!--Form with no elements to POST data from buttons
+<form action="StoreFront.php", id="main" method="POST"></form>-->
 
 <?php
 $mysqli = new mysqli('oniddb.cws.oregonstate.edu', 'kosloffd-db', $pass, 'kosloffd-db');
@@ -30,9 +30,11 @@ if(!$mysqli || $mysqli->connect_errno)
 	echo "Connection error" . $mysqli -> connect_errno . " " . $mysqli -> connect_error; 
 }
 
-//If there is a POST to the page with 
+//If there is a POST to the page with any values in the fields...
 if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"]))
 {
+	$dataValidated = NULL;
+	
 	//Ensure the required Name field is filled
 	if($_POST["name"] == "")
 	{
@@ -52,9 +54,8 @@ if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"])
 		$dataValidated = false;
 	}
 
-	if($dataValidated != false)
+	if($dataValidated !== false)
 	{
-		$dataValidated = true;
 		//Check for a duplicate title in the database
 		if(!($stmt = $mysqli->prepare("SELECT name FROM film")))
 		{
@@ -80,7 +81,7 @@ if(isset($_POST["name"]) || isset($_POST["category"]) || isset($_POST["length"])
 		}
 		$stmt -> close();
 		
-		if($dataValidated == true)
+		if($dataValidated !== false)
 		{
 			$addName = $_POST["name"];
 			$addCat = $_POST["category"];
@@ -129,7 +130,7 @@ if(isset($_POST["checkoutMovie"]))
 	$stmt->close();
 }
 
-//Return a movie
+//Return a movie 
 if(isset($_POST["returnMovie"]))
 {
 	$movieID = $_POST["returnMovie"];
@@ -167,6 +168,36 @@ if(isset($_POST["deleteMovie"]))
 	$stmt->close();
 }
 
+if (!$stmt = $mysqli->prepare("SELECT category FROM film GROUP BY category")) 
+{
+  echo "Couldn't prepare categories statement: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+if(!$stmt->execute())
+{
+	echo "Couldn't execute categories statement: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+$dbCategory = NULL;
+if(!$stmt->bind_result($dbCategory))
+{
+	echo "Couldn't bind return results: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+echo "<form action=\"StoreFront.php\" method=\"POST\"> <label>Filter by Category:</label>
+<input name=\"filter\" list=\"categories\"><datalist id=\"categories\"><option value=\"All Movies\">";
+while($stmt->fetch())
+{
+	echo "<option value=\"$dbCategory\">";
+}
+echo"</datalist>";
+if($dbCategory !== NULL)
+{
+	echo "<button type = submit>Filter Results</button >";
+}
+echo"</form>";
+$stmt->close();
+
+
 								//Prepare a statement to create the table of movies WITH FILTER and refresh the page							--create table
 								//It will be like: echo <table>; while() echo <tr>; while ...->fetch echo <td>$value;  
 									//Should activate EVERY TIME, that way the page can just refresh and it will update the displayed table
@@ -191,26 +222,29 @@ if(!$stmt->bind_result($movieID, $dbName, $dbCategory, $dbLength, $dbRented))
 {
 	echo "Couldn't bind return results: (" . $mysqli->errno . ") " . $mysqli->error;
 }
+
+$filter = "All Movies";
+if(isset($_POST["filter"]))	{$filter = $_POST["filter"];}
 while($stmt->fetch())
 {
-	if($dbRented == 0){$dbRented = "Available";}
-	else{$dbRented = "Checked Out";}
-	echo "<tr><td><button form=\"main\" name=\"deleteMovie\" value=\"$movieID\">Delete</button>
-	 <td>$dbName <td>$dbCategory <td>$dbLength min <td>$dbRented";
-	if($dbRented == "Available")
-		{echo "<td><button form=\"main\" name=\"checkoutMovie\" value=\"$movieID\">Checkout Movie</button>";}
-	else
-		{echo "<td><button form=\"main\" name=\"returnMovie\" value=\"$movieID\">Return Movie</button>";}
+	//If a category has been selected, filter by that category
+	if($dbCategory == $filter || $filter == "All Movies")
+	{
+		if($dbRented == 0){$dbRented = "Available";}
+		else{$dbRented = "Checked Out";}
+	
+		echo "<tr><td><form method=\"POST\"><button form=\"main\" name=\"deleteMovie\" value=\"$movieID\"type=\"submit\">Delete</button></form>
+		 <td>$dbName <td>$dbCategory <td>$dbLength min <td>$dbRented";
+		if($dbRented == "Available")
+			{echo "<td><form method=\"POST\"><td><button name=\"checkoutMovie\" value=\"$movieID\" type=\"submit\">Checkout Movie</button></form>";}
+		else
+			{echo "<td><form method=\"POST\"><button name=\"returnMovie\" value=\"$movieID\" type=\"submit\">Return Movie</button></form>";}
+	}
 }
-if($movieID == NULL) {echo "<tr><td><td>There are no titles to display";}
+if($movieID == NULL) {echo "<tr><td><td>There are no titles to display.";}
 //Show the Delete All button only if there is data in the table
 echo "</table>";
-if(!($movieID == NULL)) {echo "<button form=\"main\" name=\"deleteAll\" value=\"true\">Delete All Movies</button>";}
+if(!($movieID == NULL)) {echo "<form method=\"POST\"><button form=\"main\" name=\"deleteAll\" value=\"true\">Delete All Movies</button></form>";}
 
 $stmt->close();
-									//The filter button will then be pretty much a page refresh button  	 													--filter button
-								//to create table, just use $mySqli->query to get data and echo the HTML table rows
-								//You will need to get the values for the category (+ an "All Movies" value) from the 
-								//server with GROUP BY category or DISTINCT
-
 ?>
