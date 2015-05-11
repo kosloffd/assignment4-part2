@@ -1,0 +1,23 @@
+Start: Sun, 10 May 2015 20:46:14 -0700 
+End: Sun, 10 May 2015 22:41:14 -0700 
+Tasks: Assignment completed with CSS styling. 
+
+Start: Sun, 10 May 2015 16:05:23 -0700 
+End: Sun, 10 May 2015 18:43:23 -0700 
+Tasks: Finished assignment without CSS.  Most of this time was spent on the filtering feature and a little spent making sure my buttons work in IE 
+
+Start: Sun, 10 May 2015 15:26:44 -0700 
+End: Sun, 10 May 2015 15:46:44 -0700 
+Tasks: Resolved the duplicate video validation. 
+
+Start: Sun, 10 May 2015 10:03:20 -0700 
+End: Sun, 10 May 2015 15:08:20 -0700 
+Tasks: Worked on delete, checkout, delete all buttons and spent a lot of this time on checking for duplicate video titles -still not donw with that part. 
+
+Start: Sat, 09 May 2015 23:10:35 -0700 
+End: Sun, 10 May 2015 02:29:35 -0700 
+Tasks: Worked on connecting to database. The page is able to add movies and show a table populated from the database. 
+
+Start: Sat, 9 May 2015 17:10:46 -0700 
+End: Sat, 9 May 2015 18:32:46 -0700 
+Tasks: Intial commit. Outlined assignment 
